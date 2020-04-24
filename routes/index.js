@@ -400,7 +400,7 @@ function postImageWidth(post_link) {
         '🚫 <b>M.R.P. : </b> ' + post_regularPrice + '\n' +
         '♨️ <b style="background-color:red;">PRICE : </b> ' + post_sellPrice + '\n' +
         '💰 <b>SAVINGS : </b> ' + savepercent + '\n' +
-        '🙋 <b>AVAILABLE : </b> <i> ' + avilabilty + '</i>\n' +
+        '🙋 <b>AVAILABILITY : </b> <i> ' + avilabilty + '</i>\n' +
         '🔗 <a href="' + post_link + '">' + post_link + '</a>\n' +
         '🚚 FREE Delivery\n\n' +
         // '👉 More Deals - <a href= @' + req.query.chanel + '> @' + req.query.chanel+'</a>\n'+
