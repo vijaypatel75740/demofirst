@@ -9,16 +9,65 @@ var connection = require('../config/connection');
 const BitlyClient = require('bitly').BitlyClient;
 const bitly = new BitlyClient('6050528e1d5594c2b447fe6b403f047c5f8e5dd6');
 var tall = require('tall').default;
-
+// var cloudinary = require('cloudinary').v2
 const axios = require('axios');
 var textVersion = require("textversionjs");
 const htmlToText = require('html-to-text');
 const cheerio = require('cheerio')
 var _ = require('underscore');
+var jimp = require('jimp');
+
+// cloudinary.config({
+//   cloud_name : 'dotar6syk',
+//   api_key : 997992189831561,
+//   api_secret: '2Izjp4Irz3GCDSrJvdDWxfwomKk'
+// })
 /* GET home page. */
 router.get('/', function (req, res, next) {
   res.render('index', { title: 'Express' });
 });
+
+router.get('/funny', function (req, res, next) {
+
+// cloudinary.uploader.upload(
+//   "https://images-na.ssl-images-amazon.com/images/I/71K1E6hiIiL._SL1500_.jpg", 
+//   {
+//     secure: true, transformation: [
+//       { crop: "fill"},
+//       // {effect: "sepia"},
+//       {overlay: "jnqzqtggxmoxrtjqqgla", gravity: "south_east", x: 30, y: 1350, width: 340, opacity: 100},
+//       ]
+
+//     }, 
+//   function(error, result) { 
+//     console.log(result) 
+//   }
+// );
+
+
+var images = ['https://images-na.ssl-images-amazon.com/images/I/61YYGJUiA8L._SX569_.jpg','public/logo.png'];
+
+var jimps = [];
+
+for (var i = 0; i < images.length; i++) {
+  jimps.push(jimp.read(images[i]));
+}
+
+Promise.all(jimps).then(function(data) {
+  return Promise.all(jimps);
+}).then(function(data) {
+  console.log('data: ', data);
+  data[0].composite(data[1],0,0);
+  // data[0].composite(data[2],0,0);
+
+  data[0].write('public/finalimages/test.png', function() {
+    console.log('f===== ', 'localhost:3000/finalimages/test.png');
+
+    console.log("wrote the image");
+  });
+});
+});
+
 
 router.get('/telegram_post', function (req, res, next) {
   async.waterfall([
@@ -305,7 +354,7 @@ router.get('/telegram_posts', function (req, res, next) {
 router.get('/singlepostFlags', function (req, res) {
   async.waterfall([
     function (nextCall) {
-      postImageWidth('https://www.amazon.in/dp/B085LPGBF3')
+      postImageWidth('https://amzn.to/2WoW4fp')
       var sqlss = " SELECT * FROM post_flags WHERE id = 1";
       connection.query(sqlss, function (err, rides) {
         if (err) {
@@ -438,8 +487,27 @@ function postImageWidth(post_link) {
           console.log('avilabilty: ', avilabilty);
 
           if(siteheadidsdng && siteheading && sitestrckprice && sitestrckpricessds && savepercent ){
+            var images = [siteheadidsdng,'public/logo.png'];
+
+          var jimps = [];
+
+          for (var i = 0; i < images.length; i++) {
+            jimps.push(jimp.read(images[i]));
+          }
+
+          Promise.all(jimps).then(function(data) {
+            return Promise.all(jimps);
+          }).then(function(data) {
+            console.log('data: ', data);
+            data[0].composite(data[1],0,0);
+            // data[0].composite(data[2],0,0);
+
+            data[0].write('public/finalimages/test.png', function() {
+              telePost('https://allinonetest1.herokuapp.com/finalimages/test.png',siteheading,sitestrckprice,sitestrckpricessds,savepercent,post_link,avilabilty)
+              console.log("wrote the image");
+            });
+          });
             console.log("===i");
-          telePost(siteheadidsdng,siteheading,sitestrckprice,sitestrckpricessds,savepercent,post_link,avilabilty)
         //  } else if(siteheadidsdng && siteheading && sitestrckpricessds && avilabilty ){
         //     console.log("===i");
         //   telePosted(siteheadidsdng,siteheading,sitestrckpricessds,post_link,avilabilty)
