@@ -15,7 +15,7 @@ var textVersion = require("textversionjs");
 const htmlToText = require('html-to-text');
 const cheerio = require('cheerio')
 var _ = require('underscore');
-var jimp = require('jimp');
+// var jimp = require('jimp');
 
 // cloudinary.config({
 //   cloud_name : 'dotar6syk',
@@ -45,27 +45,27 @@ router.get('/funny', function (req, res, next) {
 // );
 
 
-var images = ['https://images-na.ssl-images-amazon.com/images/I/61YYGJUiA8L._SX569_.jpg','public/logo.png'];
+// var images = ['https://images-na.ssl-images-amazon.com/images/I/61YYGJUiA8L._SX569_.jpg','public/logo.png'];
 
-var jimps = [];
+// var jimps = [];
 
-for (var i = 0; i < images.length; i++) {
-  jimps.push(jimp.read(images[i]));
-}
+// for (var i = 0; i < images.length; i++) {
+//   jimps.push(jimp.read(images[i]));
+// }
 
-Promise.all(jimps).then(function(data) {
-  return Promise.all(jimps);
-}).then(function(data) {
-  console.log('data: ', data);
-  data[0].composite(data[1],0,0);
-  // data[0].composite(data[2],0,0);
+// Promise.all(jimps).then(function(data) {
+//   return Promise.all(jimps);
+// }).then(function(data) {
+//   console.log('data: ', data);
+//   data[0].composite(data[1],0,0);
+//   // data[0].composite(data[2],0,0);
 
-  data[0].write('public/finalimages/test.png', function() {
-    console.log('f===== ', 'localhost:3000/finalimages/test.png');
+//   data[0].write('public/finalimages/test.png', function() {
+//     console.log('f===== ', 'localhost:3000/finalimages/test.png');
 
-    console.log("wrote the image");
-  });
-});
+//     console.log("wrote the image");
+//   });
+// });
 });
 
 
@@ -354,7 +354,7 @@ router.get('/telegram_posts', function (req, res, next) {
 router.get('/singlepostFlags', function (req, res) {
   async.waterfall([
     function (nextCall) {
-      postImageWidth('https://amzn.to/2WoW4fp')
+      postImageWidth('https://gluv.in/OP/2y6k9pwc9d2')
       var sqlss = " SELECT * FROM post_flags WHERE id = 1";
       connection.query(sqlss, function (err, rides) {
         if (err) {
@@ -404,9 +404,17 @@ router.get('/activepostFlags', function (req, res) {
                   });
                 }
               })
-            console.log(rides[j].Landing_Page,"false");
+            console.log(rides[j].domain_url,"false");
             }else{
-              console.log(rides[j].Landing_Page,"true");
+              var sqlss = "UPDATE diff_net_posts set active_flag ='TRUE' WHERE id ="+rides[j].id;
+              connection.query(sqlss, function (err, rid) {
+                if (err) {
+                  return nextCall({
+                    "message": "something went wrong",
+                  });
+                }
+              })
+              console.log(rides[j].domain_url,"true");
             }
           }).catch(function(err){ console.error('AAAW 👻', err)})
         }
@@ -469,9 +477,7 @@ function postImageWidth(post_link) {
           var $ = cheerio.load(html);
           var matchObj = [];
           var siteheading = $('#productTitle').text().trim();
-          console.log('siteheading: ', siteheading);
           var siteheadidsdng = $('.imgTagWrapper').find('img').attr('data-old-hires');
-          console.log('siteheadidsdng: ', siteheadidsdng);
           var sitestrckprice = $('.priceBlockStrikePriceString').text().trim();
           console.log('sitestrckprice: ', sitestrckprice);
           var sitestrckpricessds = $('#priceblock_ourprice').text().trim();
@@ -487,30 +493,45 @@ function postImageWidth(post_link) {
           console.log('avilabilty: ', avilabilty);
 
           if(siteheadidsdng && siteheading && sitestrckprice && sitestrckpricessds && savepercent ){
-            var images = [siteheadidsdng,'public/logo.png'];
+          //   var images = [siteheadidsdng,'public/logo.png'];
 
-          var jimps = [];
+          // var jimps = [];
 
-          for (var i = 0; i < images.length; i++) {
-            jimps.push(jimp.read(images[i]));
-          }
+          // for (var i = 0; i < images.length; i++) {
+          //   jimps.push(jimp.read(images[i]));
+          // }
 
-          Promise.all(jimps).then(function(data) {
-            return Promise.all(jimps);
-          }).then(function(data) {
-            console.log('data: ', data);
-            data[0].composite(data[1],0,0);
-            // data[0].composite(data[2],0,0);
+          // Promise.all(jimps).then(function(data) {
+          //   return Promise.all(jimps);
+          // }).then(function(data) {
+          //   console.log('data: ', data);
+          //   data[0].composite(data[1],0,0);
+          //   // data[0].composite(data[2],0,0);
 
-            data[0].write('public/finalimages/test.png', function() {
-              telePost('https://allinonetest1.herokuapp.com/finalimages/test.png',siteheading,sitestrckprice,sitestrckpricessds,savepercent,post_link,avilabilty)
-              console.log("wrote the image");
-            });
-          });
+          //   data[0].write('public/finalimages/test.png', function() {
+          //     console.log("wrote the image");
+          //   });
+          // });
+
+    //       cloudinary.uploader.upload(
+    //         siteheadidsdng, 
+    //   {
+    //     secure: true, transformation: [
+    //       { crop: "fill"},
+    //       {overlay: "jnqzqtggxmoxrtjqqgla", gravity: "south_east", x: 30, y: 1350, width: 340, opacity: 100},
+    //       ]
+
+    //     }, 
+    //   function(error, result) { 
+    //     telePost(result.url,siteheading,sitestrckprice,sitestrckpricessds,savepercent,post_link,avilabilty)
+    //     console.log(result) 
+    //   }
+    // );
+        telePost(siteheadidsdng,siteheading,sitestrckprice,sitestrckpricessds,savepercent,post_link,avilabilty)
             console.log("===i");
-        //  } else if(siteheadidsdng && siteheading && sitestrckpricessds && avilabilty ){
-        //     console.log("===i");
-        //   telePosted(siteheadidsdng,siteheading,sitestrckpricessds,post_link,avilabilty)
+         } else if(siteheadidsdng && siteheading && sitestrckpricessds && avilabilty ){
+            console.log("===i");
+          telePosted(siteheadidsdng,siteheading,sitestrckpricessds,post_link,avilabilty)
         }else{
             console.log("no---");
           }
@@ -543,7 +564,6 @@ function postImageWidth(post_link) {
         ]
       ];
       console.log('html: ', html);
-
       if (html) {
         bot = new nodeTelegramBotApi(token);
         bot.sendPhoto(chatId, post_img, {
