@@ -9,19 +9,19 @@ var connection = require('../config/connection');
 const BitlyClient = require('bitly').BitlyClient;
 const bitly = new BitlyClient('7a463a50755a9a6939709bc299b8f6a3fe0b8876');
 var tall = require('tall').default;
-// var cloudinary = require('cloudinary').v2
+var cloudinary = require('cloudinary').v2
 const axios = require('axios');
 var textVersion = require("textversionjs");
 const htmlToText = require('html-to-text');
 const cheerio = require('cheerio')
 var _ = require('underscore');
 // var jimp = require('jimp');
-
-// cloudinary.config({
-//   cloud_name : 'dotar6syk',
-//   api_key : 997992189831561,
-//   api_secret: '2Izjp4Irz3GCDSrJvdDWxfwomKk'
-// })
+var shortUrl = require('node-url-shortener');
+cloudinary.config({
+  cloud_name : 'dotar6syk',
+  api_key : 997992189831561,
+  api_secret: '2Izjp4Irz3GCDSrJvdDWxfwomKk'
+})
 /* GET home page. */
 router.get('/', function (req, res, next) {
   res.render('index', { title: 'Express' });
@@ -624,9 +624,10 @@ function postImageWidth(post_link) {
           var matchObj = [];
 
           $('.tgme_widget_message_wrap').each((i, el) => {
+            var hhhh = $(el).find('.tgme_widget_message_photo_wrap').attr('style')
             var linkss = $(el).find('.tgme_widget_message_footer').find('a').attr('href').split('/');
             var link = htmlToText.fromString($(el).find('.tgme_widget_message_text').html());
-            matchObj.push({ id: Number(linkss[4]), text_data: emmoji(link) })
+            matchObj.push({ id: Number(linkss[4]), text_data: emmoji(link),text_img :hhhh })
           });
 
           // function emmoji(string) {
@@ -877,19 +878,25 @@ function postImageWidth(post_link) {
                   console.log('---0');
                 }else if(ListflagData.tele_flag == '1' && ListflagData.watts_flag == '1' ){
                   for (let l = 0; l < finalPostList.length; l++) {
-                    // if(finalPostList[l].groupflag == '0'){
+                      if(userExists[0].text_img != undefined){
+                        var cddsd = userExists[0].text_img.replace(/.*\(|\).*/g, '');
+                        teleAutoPhotoPostChannel(finalAmazon,finalPostList[l].groupname,cddsd);
+                      }else{
                       teleAutoPostChannel(finalAmazon,finalPostList[l].groupname);
                       // teleAutoPost(finalAmazon);
-                    // }
+                    }
                   }
                   whatsapp_posts1(finalAmazon, finalIdList[0].apiKey,finalIdList[0].phoneId,finalIdList[0].productId);
                   whatsapp_posts2(finalAmazon, finalIdList[1].apiKey,finalIdList[1].phoneId,finalIdList[1].productId);
                 }else if(ListflagData.tele_flag == '1' && ListflagData.watts_flag == '0' ){
                   for (let l = 0; l < finalPostList.length; l++) {
-                    // if(finalPostList[l].groupflag == '0'){
+                    if(userExists[0].text_img != undefined){
+                      var cddsds = userExists[0].text_img.replace(/.*\(|\).*/g, '');
+                      teleAutoPhotoPostChannel(finalAmazon,finalPostList[l].groupname,cddsds);
+                    }else{
                       teleAutoPostChannel(finalAmazon,finalPostList[l].groupname);
-                      // teleAutoPost(finalAmazon);
-                    // }
+                    // teleAutoPost(finalAmazon);
+                  }
                   }
                 }else if(ListflagData.tele_flag == '0' && ListflagData.watts_flag == '1' ){
                   whatsapp_posts1(finalAmazon, finalIdList[0].apiKey,finalIdList[0].phoneId,finalIdList[0].productId);
@@ -936,6 +943,39 @@ function teleAutoPostChannel(finalAmazon,chanelName){
     //     setup();
     //   }
     // })
+}
+
+function teleAutoPhotoPostChannel(finalAmazon,chanelName,post_img){
+          cloudinary.uploader.upload(
+            post_img, 
+      {
+        secure: true, transformation: [
+          { crop: "fill"},
+          {overlay: "jnqzqtggxmoxrtjqqgla", gravity: "south_east", x: 5, y: 5, width: 180, opacity: 150},
+          ]
+        }, 
+      function(error, result) { 
+        if(error){
+          teleAutoPostChannel(finalAmazon,chanelName);
+        }else{
+        console.log(result) 
+  // shortUrl.short('https://cdn5.telesco.pe/file/KOeBsJ6UALSENhYEem46CDmoLqs4KJODrjDbcB5KwloYB73gc7XFqP8mUzlW3YnjEAyiHb5csMcLTTfFiA_2lE1qIpCzL_BsnAz834cEkgiUdD-5oC1QRQGR5kNAOgWCBSIrUOnvn9MryUl0TI7H_NvCMS7DSRxHLVQGe2n7VhM7fhP7t3g52Vn_tsvJwFE-THptHH6IwexH6_M30enwwDzlISNFwJNYEHyPSeYY-2h7cwtVDWLWUIkSv1f71g_crPJTGHyafhepZskAlpmiwVudL5m88eljpNaRzdzMYEMTwDTfYqH0BvPFLHZJ4kdqWTY_bQnfl8TwNocs4mnNzw.jpg', function(err, url){
+  //   console.log(url);
+      var token = '1175672156:AAHUFIWJdFB5vaEXOFn4GsanLAacKJUNDdw';  // <= replace with yours
+        // var chatId = "-1001430322596"; // <= replace with yours
+      var chatId = chanelName; // <= replace with yours
+        bot = new nodeTelegramBotApi(token);
+          bot.sendPhoto(chatId, result.url, {
+            caption: finalAmazon,
+            // parse_mode: "HTML",
+            // disable_web_page_preview: true,
+            // "reply_markup": {
+            //   "inline_keyboard": buttons
+            // }
+          });
+        }
+        });
+// });
 }
 
 
